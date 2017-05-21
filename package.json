@@ -1,0 +1,8 @@
+{
+  "name": "down-notifier",
+  "version": "1.0.0",
+  "main": "down-notifier.js",
+  "dependencies": {
+    "sendgrid": "^5.1.0"
+  }
+}

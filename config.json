@@ -1,0 +1,7 @@
+{
+    "fromEmail": "Email address that sent emails will appear from",
+    "message": "Message in the body of the email",
+    "sendGridAPIKey": "SendGrid API Key to send emails",
+    "toEmails": ["A list of emails to notify"],
+    "url": "Website URL to check",
+}
