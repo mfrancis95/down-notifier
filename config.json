@@ -1,7 +1,11 @@
 {
-    "fromEmail": "Email address that sent emails will appear from",
-    "message": "Message in the body of the email",
-    "sendGridAPIKey": "SendGrid API Key to send emails",
-    "toEmails": ["A list of emails to notify"],
-    "url": "Website URL to check",
+    "503": "Whether 503 status code counts as down. Defaults to true",
+    "interval": "Milliseconds delay between website checkups",
+    "sendGrid": {
+        "apiKey": "SendGrid API Key to send emails",
+        "from": "Email address that sent emails will appear from",
+        "message": "Body of the email",
+        "to": ["A list of emails to notify"]
+    },
+    "url": "Website URL to check"
 }

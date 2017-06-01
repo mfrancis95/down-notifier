@@ -1,8 +1,12 @@
 const config = require(process.argv[2] || "./config.json");
 const http = require("http");
-const sendGrid = require("sendgrid")(config.sendGridAPIKey);
+const sendGrid = require("sendgrid")(config.sendGrid.apiKey);
 
 let down = false;
+
+if (!config.hasOwnProperty("503")) {
+    config["503"] = true;
+}
 
 function checkWebsite() {
     http.get(config.url, isUp).on("error", isDown);
@@ -14,25 +18,25 @@ function emailMapper(toEmail) {
 
 function isDown() {
     if (down) {
-        console.log(`${config.url} is still down.`);
+        log(`${config.url} is still down.`);
     }
     else {
         down = true;
-        console.log(`${config.url} is down. Sending email(s)...`);
+        log(`${config.url} is down. Sending email(s)...`);
         const request = sendGrid.emptyRequest({
             body: {
                 content: [
                 {
                     type: "text/plain",
-                    value: config.message
+                    value: config.sendGrid.message
                 }
                 ],
                 from: {
-                    email: config.fromEmail
+                    email: config.sendGrid.from
                 },
                 personalizations: [
                 {
-                    to: config.toEmails.map(emailMapper),
+                    to: config.sendGrid.to.map(emailMapper),
                     subject: `${config.url} is down`
                 }
                 ]
@@ -44,15 +48,22 @@ function isDown() {
     }
 }
 
-function isUp() {
-    if (down) {
+function isUp(response) {
+    if (config["503"] && response.statusCode === 503) {
+        isDown();
+    }
+    else if (down) {
         down = false;
-        console.log(`${config.url} is back up.`);
+        log(`${config.url} is back up.`);
     }
     else {
-        console.log(`${config.url} is up.`);
+        log(`${config.url} is up.`);
     }
 }
 
+function log(message) {
+    console.log(`${new Date()} - ${message}`);
+}
+
 checkWebsite();
-setInterval(checkWebsite, 60000);
+setInterval(checkWebsite, config.interval);
