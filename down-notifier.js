@@ -23,28 +23,7 @@ function isDown() {
     else {
         down = true;
         log(`${config.url} is down. Sending email(s)...`);
-        const request = sendGrid.emptyRequest({
-            body: {
-                content: [
-                {
-                    type: "text/plain",
-                    value: config.sendGrid.message
-                }
-                ],
-                from: {
-                    email: config.sendGrid.from
-                },
-                personalizations: [
-                {
-                    to: config.sendGrid.to.map(emailMapper),
-                    subject: `${config.url} is down`
-                }
-                ]
-            },
-            method: "POST",
-            path: "/v3/mail/send"
-        });
-        sendGrid.API(request);
+        sendEmails();
     }
 }
 
@@ -54,7 +33,13 @@ function isUp(response) {
     }
     else if (down) {
         down = false;
-        log(`${config.url} is back up.`);
+        if (config.sendGrid.message.up) {
+            log(`${config.url} is back up. Sending email(s)...`);
+            sendEmails();
+        }
+        else {
+            log(`${config.url} is back up.`);
+        }
     }
     else {
         log(`${config.url} is up.`);
@@ -63,6 +48,31 @@ function isUp(response) {
 
 function log(message) {
     console.log(`${new Date()} - ${message}`);
+}
+
+function sendEmails() {
+    const request = sendGrid.emptyRequest({
+        body: {
+            content: [
+            {
+                type: "text/plain",
+                value: config.sendGrid.message[down ? "down" : "up"]
+            }
+            ],
+            from: {
+                email: config.sendGrid.from
+            },
+            personalizations: [
+            {
+                to: config.sendGrid.to.map(emailMapper),
+                subject: `${config.url} is ${down ? "down" : "back up"}`
+            }
+            ]
+        },
+        method: "POST",
+        path: "/v3/mail/send"
+    });
+    sendGrid.API(request);
 }
 
 checkWebsite();

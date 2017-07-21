@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "down-notifier.js",
   "dependencies": {
-    "sendgrid": "^5.1.0"
+    "sendgrid": "^5.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mfrancis95/down-notifier.git"
   }
 }

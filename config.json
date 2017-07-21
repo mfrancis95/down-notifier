@@ -4,7 +4,10 @@
     "sendGrid": {
         "apiKey": "SendGrid API Key to send emails",
         "from": "Email address that sent emails will appear from",
-        "message": "Body of the email",
+        "message": {
+            "down": "Body of the email to send when website is down",
+            "up": "If included, body to send when website is back up"
+        },
         "to": ["A list of emails to notify"]
     },
     "url": "Website URL to check"
